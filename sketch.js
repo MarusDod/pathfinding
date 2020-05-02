@@ -5,11 +5,12 @@ var obstaclelist;
 var pathlist;
 var inicio;
 var current;
+var cooldown;
 var finish;
 var frameX = 500;
 var frameY = 500;
-var rows = 30;
-var cols = 20;
+var rows = 25;
+var cols = 10;
 var coolMouse;
 var running;
 var started;
@@ -18,13 +19,18 @@ var button1;
 var button2;
 var boolnode;
 var buttonPause;
+var switched;
+var erased;
 
 function setup(){
   createCanvas(frameX+100,frameY+50);
+  switched=false;
+  erased=false;
   boolnode=0;
   coolMouse=0;
   started=false;
   running=true;
+  cooldown=0;
   pause=false;
   textSize(27);
   button1 = createButton('Start');
@@ -82,9 +88,13 @@ else if(running==false && openlist.length>0){
   }
 }
 else{
-  if(boolnode<=2 && (millis()-coolMouse>100 || boolnode==2)){
+  if(boolnode<2 && (millis()-coolMouse>100 || boolnode==2)){
     coolMouse=millis();
     actionMouse();
+  }
+  else if(boolnode==2){
+      if(mouseIsPressed) actionMouse();
+      else switched=true;
   }
 }
 }
@@ -140,7 +150,18 @@ function setBool(i,j){
     boolnode++;
   }
   else{
-    if(!obstaclelist.includes(list[i][j]) && list[i][j]!=finish) obstaclelist.push(list[i][j]);
+    if(switched==true){
+      switched=false;
+      if(obstaclelist.includes(list[i][j])) erased=true;
+      else erased=false;
+    }
+    console.log(erased);
+    if(erased==false){
+       if(!obstaclelist.includes(list[i][j]) && list[i][j]!=finish) obstaclelist.push(list[i][j]);
+     }
+    else if(erased==true){
+       if(obstaclelist.includes(list[i][j])) removefromarray(obstaclelist,list[i][j]);
+     }
   }
 }
 function actionMouse(){

@@ -39,7 +39,7 @@ this.lowestF = function(){
     var index=0;
     for(var i=1;i<openlist.length;i++){
       openlist[i].setDistance(this);
-      if(openlist[i].f<minor && !closedlist.includes(openlist[i]) && !obstaclelist.includes(openlist[i])){
+      if(openlist[i].f<minor){
         minor=openlist[i].f;
         index=i;
       }
